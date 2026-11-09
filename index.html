@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>LKW-Abnahme</title>
+  <meta name="theme-color" content="#0b3d6e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="LKW-Abnahme">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <img src="icons/icon.svg" alt="" width="28" height="28">
+      <span>LKW-Abnahme</span>
+    </div>
+    <button id="btnNew" class="ghost small" title="Neue Abnahme beginnen">Neu</button>
+  </header>
+
+  <nav class="steps" id="steps">
+    <button data-step="1" class="active"><b>1</b> Fahrzeug</button>
+    <button data-step="2"><b>2</b> Prüfung <span id="progressBadge" class="badge"></span></button>
+    <button data-step="3"><b>3</b> Abschluss</button>
+  </nav>
+
+  <main>
+    <!-- ───────────── Schritt 1 ───────────── -->
+    <section id="step1" class="step active">
+      <h2>Kategorie</h2>
+      <div class="cats" id="cats"></div>
+
+      <h2>Fahrzeug &amp; Auftrag</h2>
+      <div class="grid">
+        <label>Lieferant / Aufbauhersteller*<input data-meta="lieferant" list="lieferanten" autocomplete="off"></label>
+        <label>AB-/Angebots-Nr.<input data-meta="abNr"></label>
+        <label>Fahrgestell (Hersteller/Typ)<input data-meta="fahrgestell" placeholder="z. B. MAN TGS 26.440 6x2-4 LL"></label>
+        <label>Aufbau / Anbaugerät<input data-meta="aufbau" placeholder="z. B. Curtainsider + PK 30 TEC"></label>
+        <label>FIN*<input data-meta="fin" autocapitalize="characters" maxlength="17"></label>
+        <label>Kennzeichen<input data-meta="kennzeichen" autocapitalize="characters"></label>
+        <label>Interne Fahrzeug-Nr.<input data-meta="fzNr"></label>
+        <label>Ort der Abnahme<input data-meta="ort"></label>
+        <label>Datum*<input data-meta="datum" type="date"></label>
+        <label>Prüfer (WEGO)*<input data-meta="pruefer" autocomplete="name"></label>
+        <label>Vertreter Lieferant<input data-meta="vertreter"></label>
+      </div>
+      <datalist id="lieferanten">
+        <option>Chr. Döhle Fahrzeugbau GmbH &amp; Co. KG</option>
+        <option>Wecon GmbH</option>
+        <option>Kotschenreuther Fahrzeugbau Jahnsdorf GmbH &amp; Co. KG</option>
+        <option>Hesotec GmbH</option>
+      </datalist>
+      <div class="actions">
+        <button class="primary" data-goto="2">Weiter zur Prüfung →</button>
+      </div>
+    </section>
+
+    <!-- ───────────── Schritt 2 ───────────── -->
+    <section id="step2" class="step">
+      <div class="checkhead">
+        <div id="catLabel" class="catlabel"></div>
+        <div class="legend"><span class="s ok">✓ i.O.</span><span class="s nok">✗ Mangel</span><span class="s na">– n.v.</span></div>
+      </div>
+      <div id="sections"></div>
+
+      <div class="card">
+        <h3>Weitere Prüfpunkte aus der AB</h3>
+        <p class="muted">Ein Punkt je Zeile – z. B. direkt aus der Auftragsbestätigung kopiert.</p>
+        <textarea id="customInput" rows="3" placeholder="z. B. Halterung für Kinshofer Wendegabel mit Federriegel"></textarea>
+        <button id="btnAddCustom" class="secondary">Punkte hinzufügen</button>
+      </div>
+
+      <div class="actions">
+        <button class="ghost" data-goto="1">← Zurück</button>
+        <button class="primary" data-goto="3">Weiter zum Abschluss →</button>
+      </div>
+    </section>
+
+    <!-- ───────────── Schritt 3 ───────────── -->
+    <section id="step3" class="step">
+      <h2>Zusammenfassung</h2>
+      <div id="summary" class="summary"></div>
+      <div id="defects"></div>
+
+      <h2>Ergebnis</h2>
+      <div class="result" id="result">
+        <button data-result="ok">Abgenommen<br><small>ohne Mängel</small></button>
+        <button data-result="nacharbeit">Abgenommen<br><small>mit Nacharbeit</small></button>
+        <button data-result="abgelehnt">Nicht abgenommen</button>
+      </div>
+      <label class="full">Bemerkungen / Vereinbarungen (z. B. Termin Nacharbeit)
+        <textarea data-meta="bemerkung" rows="3"></textarea>
+      </label>
+
+      <h2>Unterschriften</h2>
+      <div class="sigs">
+        <div class="sig">
+          <div class="siglabel">Prüfer (WEGO) <button class="ghost small" data-clear="pruefer">löschen</button></div>
+          <canvas data-sig="pruefer"></canvas>
+        </div>
+        <div class="sig">
+          <div class="siglabel">Lieferant <button class="ghost small" data-clear="lieferant">löschen</button></div>
+          <canvas data-sig="lieferant"></canvas>
+        </div>
+      </div>
+
+      <h2>Protokoll versenden</h2>
+      <div class="mailbox">
+        <div class="presets" id="presets"></div>
+        <div class="chips" id="chips"></div>
+        <div class="mailinput">
+          <input id="mailInput" type="email" inputmode="email" placeholder="E-Mail-Adresse eingeben, Enter zum Hinzufügen" autocomplete="email">
+          <button id="btnAddMail" class="secondary">+</button>
+        </div>
+      </div>
+
+      <div class="actions wrap">
+        <button class="ghost" data-goto="2">← Zurück</button>
+        <button id="btnPdf" class="secondary">PDF ansehen</button>
+        <button id="btnSend" class="primary">PDF per Mail senden</button>
+      </div>
+      <p id="sendHint" class="muted small"></p>
+    </section>
+  </main>
+
+  <div id="toast" class="toast"></div>
+
+  <script src="vendor/jspdf.umd.min.js"></script>
+  <script src="vendor/jspdf.plugin.autotable.min.js"></script>
+  <script src="config.js"></script>
+  <script src="checklist.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
