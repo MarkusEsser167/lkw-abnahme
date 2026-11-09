@@ -16,5 +16,5 @@ window.APP_CONFIG = {
    * Hier die Web-App-URL eintragen: "https://script.google.com/macros/s/…/exec"
    * Leer lassen = Versand über das Teilen-Menü / Mailprogramm des Geräts.
    */
-  sendEndpoint: "",
+  sendEndpoint: "https://script.google.com/macros/s/AKfycbxQskHoHGe_iZwtxz5bSiX0uM0Y83C_MjOdMXQEGlUdzQT90ykKNLKSDTAbJQucdUmlWg/exec",
 };
