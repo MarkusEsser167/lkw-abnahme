@@ -540,11 +540,15 @@
       btn.disabled = true; btn.textContent = "Sende …";
       try {
         const pdfBase64 = doc.output("datauristring").split(",")[1];
+        // text/plain verhindert den CORS-Preflight, den Google Apps Script nicht beantwortet
         const r = await fetch(CFG.sendEndpoint, {
-          method: "POST", headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ to: S.emails, subject, body, filename: name, pdfBase64 }),
+          method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, redirect: "follow",
+          body: JSON.stringify({ to: S.emails.join(","), subject, message: body, filename: name, pdf_base64: pdfBase64 }),
         });
-        if (!r.ok) throw new Error(r.status);
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        let res = {};
+        try { res = await r.json(); } catch {}
+        if (res.status && res.status !== "ok") throw new Error(res.message || res.status);
         toast("✓ Protokoll versendet an " + S.emails.length + " Empfänger", 4000);
       } catch (err) {
         toast("Versand fehlgeschlagen (" + err.message + ") – bitte über Mailprogramm senden", 5000);

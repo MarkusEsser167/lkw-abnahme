@@ -11,10 +11,9 @@ window.APP_CONFIG = {
   ],
 
   /*
-   * Optional: Endpunkt für automatischen Mailversand (z. B. Power Automate
-   * "Beim Empfang einer HTTP-Anforderung" → "E-Mail senden (V2)" mit Anhang).
-   * Die App sendet per POST JSON:
-   *   { to: ["a@b.de", ...], subject, body, filename, pdfBase64 }
+   * Automatischer Mailversand über Google Apps Script (wie in der Unfall-App).
+   * Code + Anleitung: apps-script/Code.gs bzw. README.md.
+   * Hier die Web-App-URL eintragen: "https://script.google.com/macros/s/…/exec"
    * Leer lassen = Versand über das Teilen-Menü / Mailprogramm des Geräts.
    */
   sendEndpoint: "",

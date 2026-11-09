@@ -1,6 +1,6 @@
 // Service Worker: App offline verfügbar machen.
 // Bei jeder Änderung an den Dateien VERSION hochzählen.
-const VERSION = "v1";
+const VERSION = "v2";
 const CACHE = "lkw-abnahme-" + VERSION;
 const FILES = [
   "./", "index.html", "styles.css", "app.js", "config.js", "checklist.js",
