@@ -1,6 +1,6 @@
 // Service Worker: App offline verfügbar machen.
 // Bei jeder Änderung an den Dateien VERSION hochzählen.
-const VERSION = "v3";
+const VERSION = "v4";
 const CACHE = "lkw-abnahme-" + VERSION;
 const FILES = [
   "./", "index.html", "styles.css", "app.js", "config.js", "checklist.js",
@@ -21,7 +21,7 @@ self.addEventListener("activate", (e) => {
 self.addEventListener("fetch", (e) => {
   if (e.request.method !== "GET" || new URL(e.request.url).origin !== location.origin) return;
   e.respondWith(
-    fetch(e.request)
+    fetch(e.request, { cache: "no-cache" }) // immer beim Server nachfragen, nicht 10 min aus HTTP-Cache
       .then((r) => { const cp = r.clone(); caches.open(CACHE).then((c) => c.put(e.request, cp)); return r; })
       .catch(() => caches.match(e.request, { ignoreSearch: true }))
   );
